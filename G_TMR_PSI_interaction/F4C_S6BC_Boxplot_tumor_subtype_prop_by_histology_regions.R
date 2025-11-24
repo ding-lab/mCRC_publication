@@ -74,11 +74,11 @@ BoxP1 <- ggplot(tumor_subtype_prop,
     axis.text.x = element_text(angle = 45, hjust = 1) # Optional: angled x-axis labels
   )
 
-BoxP2 <- ggplot(tumor_subtype_prop %>% filter(All_cell_type2 %in% c('Stem-like', 'Non-canonical')), 
+BoxP2 <- ggplot(tumor_subtype_prop, 
                 aes(x = tmr_region, y = proportion, fill = tmr_region, color = tmr_region)) +
          geom_boxplot(outlier.shape = NA, alpha = 0.6) +
          geom_point(size = 1.5, aes(color = tmr_region)) +
-         geom_line(data = tumor_subtype_prop %>% filter(All_cell_type2 %in% c('Stem-like', 'Non-canonical')),
+         geom_line(data = tumor_subtype_prop,
                    aes(x = tmr_region, y = proportion, group = Case_ID),
                    linewidth = 0.4, alpha = 0.5, color = "gray40") +
          facet_wrap(~ All_cell_type2, scales = "free_y") +
@@ -90,17 +90,22 @@ BoxP2 <- ggplot(tumor_subtype_prop %>% filter(All_cell_type2 %in% c('Stem-like',
     comparisons = list(c("submucosa", "muscle"), c("muscle", "metastasis"), c("submucosa", "metastasis")),
     method = "wilcox.test",
     label = "p.format",
+    paired = TRUE,
     tip.length = 0.01
   ) +
   theme(
     panel.grid = element_blank(),       # Remove all grid lines
     axis.line = element_line(),         # Add x and y axis lines
     axis.ticks = element_line(),        # Add tick marks
-    axis.text.x = element_text(angle = 45, hjust = 1) # Optional: angled x-axis labels
-  )
+    axis.text.x = element_text(angle = 45, hjust = 1)) # Optional: angled x-axis labels
 
 
-out_dir = getwd()
+out_dir = file.path(getwd(), "out")
+dir.create(out_dir)
 pdf(file=file.path(out_dir, 'mCRC_N26_TMR_tumor_boxplot_by_tmr_regions.pdf'), width=8, height=8) 
 BoxP1
+dev.off()
+
+pdf(file=file.path(out_dir, 'mCRC_N26_TMR_tumor_boxplot_by_tmr_regions_paired.pdf'), width=8, height=8) 
+BoxP2
 dev.off()

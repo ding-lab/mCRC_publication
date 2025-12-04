@@ -1,0 +1,103 @@
+"","Case_ID","Sex","Race","KRAS","ROS1","FU_days","Survival"
+"1","CM1563C","F","White","mut","wt",1227,"alive"
+"2","CM268C","M","White","wt","wt",30,"dead"
+"3","CM318C","M","White","wt","mut",690,"alive"
+"4","CM329C","F","White","wt","wt",2451,"alive"
+"5","CM349C","M","White","wt","wt",2166,"dead"
+"6","CM350C","M","White","mut","wt",3899,"alive"
+"7","CM354C","F","White","mut","wt",1408,"dead"
+"8","CM357C","M","White","mut","wt",NA,"dead"
+"9","CM374C","M","African American","mut","wt",NA,"alive"
+"10","CM376C","M","White","wt","wt",NA,"dead"
+"11","CM392C","F","African American","gain","wt",1931,"dead"
+"12","CM397C","M","White","wt","wt",635,"dead"
+"13","CM426C","M","African American","gain","wt",2473,"dead"
+"14","CM478C","M","African American","mut","mut",4993,"alive"
+"15","CM492C","F","White","wt","wt",3940,"alive"
+"16","CM556C","M","African American","gain","wt",882,"alive"
+"17","CM618C","F","White","wt","wt",3260,"alive"
+"18","CM626C","M","White","wt","wt",1286,"alive"
+"19","CM655C","F","White","wt","mut",3210,"alive"
+"20","CM663C","F","White","mut","wt",770,"dead"
+"21","CM724C","M","White","wt","wt",164,"alive"
+"22","CM732C","M","White","mut","wt",3316,"alive"
+"23","CM743C","M","White","wt","wt",2946,"alive"
+"24","CM819C","M","White","wt","wt",2575,"alive"
+"25","CM873C","F","White","wt","wt",2854,"alive"
+"26","HT112C","F","White","mut/gain","mut",2223,"alive"
+"27","HT165C","M","White","wt","wt",2468,"alive"
+"28","HT179C","M","African American","mut","wt",2087,"dead"
+"29","HT186C","F","White","mut","wt",1447,"alive"
+"30","HT213C","M","White","wt","wt",2796,"alive"
+"31","HT225C","F","White","wt","wt",1094,"alive"
+"32","HT230C","M","White","wt","mut",883,"dead"
+"33","HT250C","F","African American",NA,NA,1309,"alive"
+"34","HT253C","F","White","gain","wt",903,"dead"
+"35","HT254C","F","White","mut/gain","wt",819,"dead"
+"36","HT260C","M","White","mut/gain","wt",831,"alive"
+"37","HT266C","F","White","mut/gain","wt",2551,"alive"
+"38","HT291C","F","White",NA,NA,2942,"alive"
+"39","HT307C","F","White","wt","wt",1188,"alive"
+"40","HT342C","F","White","wt","wt",1422,"alive"
+"41","HT347C","F","White","mut","wt",1025,"alive"
+"42","HT413C","M","White","wt","mut",1256,"alive"
+"43","HT448C","F","White",NA,NA,503,"alive"
+"44","HT472C","M","White","wt","mut",952,"alive"
+"45","HT489C","F","Unknown",NA,NA,2171,"alive"
+"46","HT525C","M","White","wt","wt",937,"alive"
+"47","HT539C","M","White",NA,NA,1011,"alive"
+"48","CM579C","F","African American","mut","mut",2849,"alive"
+"49","CM798C","F","White","mut","wt",730,"dead"
+"50","SP369H",NA,NA,NA,NA,NA,NA
+"51","SP819H",NA,NA,NA,NA,NA,NA
+"52","PE0050C","M","African American","wt","wt",NA,"alive"
+"53","PE0067C","F","African American","wt","wt",NA,"alive"
+"54","PE0068C","M","African American","wt","wt",NA,"dead"
+"55","PE0069C","M","African American","mut","wt",NA,"dead"
+"56","PE0073C","M","African American","wt","wt",NA,"alive"
+"57","PE0074C","F","African American","wt","wt",NA,NA
+"58","PE0075C","F","African American","wt","wt",NA,"dead"
+"59","PE0076C","M","African American","wt","wt",NA,"dead"
+"60","PE0094C","F","African American","mut","wt",NA,"dead"
+"61","PE0136C","F","African American","wt","wt",NA,"dead"
+"62","PE0227C","F","African American","mut","wt",NA,"dead"
+"63","PE0267C","M","African American","wt","wt",NA,"alive"
+"64","PE0271C","M","African American","wt","wt",NA,NA
+"65","PE0280C","M","African American","mut","wt",NA,NA
+"66","PE0306C","M","African American","mut","wt",NA,"alive"
+"67","PE0311C","F","African American","wt","wt",NA,NA
+"68","PE0319C","F","African American","mut","wt",NA,"alive"
+"69","PE0346C","F","African American","wt","wt",NA,NA
+"70","PE0349C","F","African American","wt","mut",NA,"alive"
+"71","PE0353C","M","African American","wt","wt",NA,NA
+"72","PE0383C","M","African American","mut","wt",NA,"alive"
+"73","PE0436C","M","African American","wt","wt",NA,NA
+"74","PE0448C","M","African American","wt","wt",NA,"Unknown"
+"75","PE0484C","F","African American","mut","wt",NA,NA
+"76","PE0503C","M","African American","mut","wt",NA,NA
+"77","PE0519C","M","African American","mut","wt",NA,"alive"
+"78","PE0697C","F","African American","mut","wt",NA,NA
+"79","PE0701C","F","African American","wt","wt",NA,"alive"
+"80","PE0702C","F","African American","wt","wt",NA,NA
+"81","PE0703C","M","African American","mut","wt",NA,"alive"
+"82","PE0713C","F","African American","wt","wt",NA,NA
+"83","PE0736C","F","African American","mut","wt",NA,NA
+"84","PE0755C","M","African American","mut","wt",NA,NA
+"85","PE0757C","M","African American","mut","mut",NA,"alive"
+"86","PE0758C","F","African American","mut","wt",NA,NA
+"87","PE0783C","F","African American","mut","wt",NA,NA
+"88","PE0820C","F","African American","wt","wt",NA,NA
+"89","PE0854C","M","African American","wt","wt",NA,NA
+"90","CMD001C","F","White",NA,NA,NA,NA
+"91","CMD002C",NA,NA,NA,NA,NA,NA
+"92","CMD003C","M","White",NA,NA,NA,NA
+"93","CMD004C",NA,NA,NA,NA,NA,NA
+"94","CMD006C",NA,NA,NA,NA,NA,NA
+"95","CMD007C",NA,"White",NA,NA,NA,NA
+"96","CMD009C",NA,NA,NA,NA,NA,NA
+"97","CMD010C","M","White",NA,NA,NA,NA
+"98","CMD011C","F","White",NA,NA,NA,NA
+"99","CMD012C",NA,NA,NA,NA,NA,NA
+"100","CMD014C","M","White",NA,NA,NA,NA
+"101","CMD015C","M","White",NA,NA,NA,NA
+"102","CMD016C","F","White",NA,NA,NA,NA

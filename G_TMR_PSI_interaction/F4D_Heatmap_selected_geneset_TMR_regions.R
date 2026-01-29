@@ -60,7 +60,7 @@ tumor_auc = read.csv(tumor_auc_file, header = TRUE)
 
 genesets = c('HRC', 'revCSC',
              'Hallmark_angiogenesis', 'Hallmark_EMT', 'Hallmark_TGFB',
-             'Hallmark_PI3K')
+             'Hallmark_PI3K', 'Hallmark_KRAS_up')
 
 tumor_auc_subcols = tumor_auc[, c('SampleID', 'SampleID2', 'cell_id', genesets)]
 tumor_auc_subcols = tumor_auc_subcols %>% 

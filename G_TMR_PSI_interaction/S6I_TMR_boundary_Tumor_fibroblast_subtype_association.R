@@ -1,6 +1,7 @@
-# TMR Boundary Tumor-Fibroblast Subtype Association Analysis
+# TMR Boundary Tumor-Fibroblast Subtype Association Analysis (v2)
 # This script analyzes correlations between tumor and fibroblast subtypes
 # grouped by TMR boundary regions (tmr_group)
+# Version 2: Filters with tumor_count > 100 & fibroblast_count > 100
 
 # Load required libraries
 library(tidyverse, quietly = TRUE)
@@ -86,7 +87,7 @@ colon_tumor_fib_prop <- colon_tumor_fib_count %>%
     )
 
 colon_tumor_fib_prop_filtered <- colon_tumor_fib_prop %>%
-    filter(all_cell_count > 100 & fibroblast_count > 30)
+    filter(tumor_count > 100 & fibroblast_count > 100)
 summary(colon_tumor_fib_prop_filtered$all_cell_count)
 summary(colon_tumor_fib_prop_filtered$tumor_count)
 summary(colon_tumor_fib_prop_filtered$fibroblast_count)
@@ -110,7 +111,7 @@ combinations <- expand.grid(
 # Function to create a scatter plot for one combination
 create_scatter_subtype <- function(tumor_st, fib_st, data) {
   # Calculate correlation and p-value
-  cor_test <- cor.test(data[[tumor_st]], data[[fib_st]], use = "complete.obs", method = "spearman"))
+  cor_test <- cor.test(data[[tumor_st]], data[[fib_st]], use = "complete.obs", method = "spearman")
   cor_val <- cor_test$estimate
   p_val <- cor_test$p.value
   
@@ -178,8 +179,17 @@ output_plot_dir <- "/diskmnt/Projects/MetNet_analysis/Colorectal/analysis/figure
 output_plot_dir <- file.path(output_plot_dir, "TMR_tumor_fiborblast_association", "Colon")
 dir.create(output_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
+# Save the raw data table used for scatter plots
+raw_data_filename <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_raw_data_Colon_v2.csv")
+tryCatch({
+  write.csv(colon_tumor_fib_prop_filtered, raw_data_filename, row.names = FALSE)
+  cat("Raw data table saved to:", raw_data_filename, "\n")
+}, error = function(e) {
+  cat("Error saving raw data table:", e$message, "\n")
+})
+
 # Save as PDF (5:4 aspect ratio)
-plot_filename_pdf <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_boundary.pdf")
+plot_filename_pdf <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_boundary_v2.pdf")
 pdf(plot_filename_pdf, width = n_cols * 5, height = n_rows * 4)
 do.call(grid.arrange, c(plots_list, ncol = n_cols))
 dev.off()
@@ -199,7 +209,7 @@ for(i in 1:length(tumor_subtypes)) {
   for(j in 1:length(fibroblast_subtypes)) {
     cor_test <- cor.test(colon_tumor_fib_prop_filtered[[tumor_subtypes[i]]], 
                         colon_tumor_fib_prop_filtered[[fibroblast_subtypes[j]]], 
-                        use = "complete.obs", method = "spearman"))
+                        use = "complete.obs", method = "spearman")
     cor_matrix[i, j] <- cor_test$estimate
     pval_matrix[i, j] <- cor_test$p.value
   }
@@ -278,7 +288,10 @@ rownames(cor_matrix_display) <- clean_tumor_names[rownames(cor_matrix_display)]
 colnames(cor_matrix_display) <- clean_fib_names[colnames(cor_matrix_display)]
 
 # Create color mapping (blue for negative, orange/red for positive)
-col_fun <- colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+col_fun <- colorRamp2(
+  c(-1, -0.5, 0, 0.5, 1),
+  c("#2166ac", "#67a9cf", "white", "#f4a582", "#ca0020")
+)
 
 # Create the heatmap
 ht <- Heatmap(
@@ -309,7 +322,7 @@ ht <- Heatmap(
 
 # Draw the heatmap with title
 draw(ht, heatmap_legend_side = "bottom", 
-     column_title = "Colon (TMR Boundary)", 
+     column_title = "Colon (TMR Boundary) v2", 
      column_title_gp = gpar(fontsize = 14, fontface = "bold"))
 
 # Save the heatmap
@@ -318,10 +331,10 @@ output_plot_dir <- file.path(output_plot_dir, "TMR_tumor_fiborblast_association"
 dir.create(output_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
 # Save as PDF
-heatmap_filename_pdf <- file.path(output_plot_dir, "Tumor_Fibroblast_correlation_heatmap_boundary.pdf")
-pdf(heatmap_filename_pdf, width = 4, height = 4)
+heatmap_filename_pdf <- file.path(output_plot_dir, "Tumor_Fibroblast_correlation_heatmap_boundary_v2.pdf")
+pdf(heatmap_filename_pdf, width = 4, height = 5)
 draw(ht, heatmap_legend_side = "bottom", 
-     column_title = "Colon (TMR Boundary)", 
+     column_title = "Colon (TMR Boundary) v2", 
      column_title_gp = gpar(fontsize = 14, fontface = "bold"))
 dev.off()
 cat("PDF heatmap saved to:", heatmap_filename_pdf, "\n")
@@ -367,7 +380,7 @@ liver_tumor_fib_prop <- liver_tumor_fib_count %>%
     )
 
 liver_tumor_fib_prop_filtered <- liver_tumor_fib_prop %>%
-    filter(all_cell_count > 100 & fibroblast_count > 30)
+    filter(tumor_count > 100 & fibroblast_count > 100)
 summary(liver_tumor_fib_prop_filtered$all_cell_count)
 summary(liver_tumor_fib_prop_filtered$tumor_count)
 summary(liver_tumor_fib_prop_filtered$fibroblast_count)
@@ -396,8 +409,17 @@ output_plot_dir <- "/diskmnt/Projects/MetNet_analysis/Colorectal/analysis/figure
 output_plot_dir <- file.path(output_plot_dir, "TMR_tumor_fiborblast_association", "Liver")
 dir.create(output_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
+# Save the raw data table used for scatter plots
+raw_data_filename <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_raw_data_Liver_v2.csv")
+tryCatch({
+  write.csv(liver_tumor_fib_prop_filtered, raw_data_filename, row.names = FALSE)
+  cat("Raw data table saved to:", raw_data_filename, "\n")
+}, error = function(e) {
+  cat("Error saving raw data table:", e$message, "\n")
+})
+
 # Save as PDF (5:4 aspect ratio)
-plot_filename_pdf <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_boundary.pdf")
+plot_filename_pdf <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_boundary_v2.pdf")
 pdf(plot_filename_pdf, width = n_cols * 5, height = n_rows * 4)
 do.call(grid.arrange, c(plots_list_liver, ncol = n_cols))
 dev.off()
@@ -417,7 +439,7 @@ for(i in 1:length(tumor_subtypes)) {
   for(j in 1:length(fibroblast_subtypes)) {
     cor_test <- cor.test(liver_tumor_fib_prop_filtered[[tumor_subtypes[i]]], 
                         liver_tumor_fib_prop_filtered[[fibroblast_subtypes[j]]], 
-                        use = "complete.obs", method = "spearman"))
+                        use = "complete.obs", method = "spearman")
     cor_matrix_liver[i, j] <- cor_test$estimate
     pval_matrix_liver[i, j] <- cor_test$p.value
   }
@@ -481,7 +503,10 @@ rownames(cor_matrix_display_liver) <- clean_tumor_names[rownames(cor_matrix_disp
 colnames(cor_matrix_display_liver) <- clean_fib_names[colnames(cor_matrix_display_liver)]
 
 # Create color mapping (blue for negative, orange/red for positive)
-col_fun <- colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+col_fun <- colorRamp2(
+  c(-1, -0.5, 0, 0.5, 1),
+  c("#2166ac", "#67a9cf", "white", "#f4a582", "#ca0020")
+)
 
 # Create the heatmap
 ht_liver <- Heatmap(
@@ -512,7 +537,7 @@ ht_liver <- Heatmap(
 
 # Draw the heatmap with title
 draw(ht_liver, heatmap_legend_side = "bottom", 
-     column_title = "Liver (TMR Boundary)", 
+     column_title = "Liver (TMR Boundary) v2", 
      column_title_gp = gpar(fontsize = 14, fontface = "bold"))
 
 # Save the heatmap
@@ -521,10 +546,10 @@ output_plot_dir <- file.path(output_plot_dir, "TMR_tumor_fiborblast_association"
 dir.create(output_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
 # Save as PDF
-heatmap_filename_pdf <- file.path(output_plot_dir, "Tumor_Fibroblast_correlation_heatmap_boundary.pdf")
-pdf(heatmap_filename_pdf, width = 4, height = 4)
+heatmap_filename_pdf <- file.path(output_plot_dir, "Tumor_Fibroblast_correlation_heatmap_boundary_v2.pdf")
+pdf(heatmap_filename_pdf, width = 4, height = 5)
 draw(ht_liver, heatmap_legend_side = "bottom", 
-     column_title = "Liver (TMR Boundary)", 
+     column_title = "Liver (TMR Boundary) v2", 
      column_title_gp = gpar(fontsize = 14, fontface = "bold"))
 dev.off()
 cat("PDF heatmap saved to:", heatmap_filename_pdf, "\n")
@@ -570,7 +595,7 @@ lung_tumor_fib_prop <- lung_tumor_fib_count %>%
     )
 
 lung_tumor_fib_prop_filtered <- lung_tumor_fib_prop %>%
-    filter(all_cell_count > 100 & fibroblast_count > 30)
+    filter(tumor_count > 100 & fibroblast_count > 100)
 summary(lung_tumor_fib_prop_filtered$all_cell_count)
 summary(lung_tumor_fib_prop_filtered$tumor_count)
 summary(lung_tumor_fib_prop_filtered$fibroblast_count)
@@ -599,8 +624,17 @@ output_plot_dir <- "/diskmnt/Projects/MetNet_analysis/Colorectal/analysis/figure
 output_plot_dir <- file.path(output_plot_dir, "TMR_tumor_fiborblast_association", "Lung")
 dir.create(output_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
+# Save the raw data table used for scatter plots
+raw_data_filename <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_raw_data_Lung_v2.csv")
+tryCatch({
+  write.csv(lung_tumor_fib_prop_filtered, raw_data_filename, row.names = FALSE)
+  cat("Raw data table saved to:", raw_data_filename, "\n")
+}, error = function(e) {
+  cat("Error saving raw data table:", e$message, "\n")
+})
+
 # Save as PDF (5:4 aspect ratio)
-plot_filename_pdf <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_boundary.pdf")
+plot_filename_pdf <- file.path(output_plot_dir, "Tumor_vs_Fibroblast_subtypes_scatter_plots_boundary_v2.pdf")
 pdf(plot_filename_pdf, width = n_cols * 5, height = n_rows * 4)
 do.call(grid.arrange, c(plots_list_lung, ncol = n_cols))
 dev.off()
@@ -684,7 +718,10 @@ rownames(cor_matrix_display_lung) <- clean_tumor_names[rownames(cor_matrix_displ
 colnames(cor_matrix_display_lung) <- clean_fib_names[colnames(cor_matrix_display_lung)]
 
 # Create color mapping (blue for negative, orange/red for positive)
-col_fun <- colorRamp2(c(-1, 0, 1), c("blue", "white", "red"))
+col_fun <- colorRamp2(
+  c(-1, -0.5, 0, 0.5, 1),
+  c("#2166ac", "#67a9cf", "white", "#f4a582", "#ca0020")
+)
 
 # Create the heatmap
 ht_lung <- Heatmap(
@@ -715,7 +752,7 @@ ht_lung <- Heatmap(
 
 # Draw the heatmap with title
 draw(ht_lung, heatmap_legend_side = "bottom", 
-     column_title = "Lung (TMR Boundary)", 
+     column_title = "Lung (TMR Boundary) v2", 
      column_title_gp = gpar(fontsize = 14, fontface = "bold"))
 
 # Save the heatmap
@@ -724,13 +761,12 @@ output_plot_dir <- file.path(output_plot_dir, "TMR_tumor_fiborblast_association"
 dir.create(output_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
 # Save as PDF
-heatmap_filename_pdf <- file.path(output_plot_dir, "Tumor_Fibroblast_correlation_heatmap_boundary.pdf")
-pdf(heatmap_filename_pdf, width = 4, height = 4)
+heatmap_filename_pdf <- file.path(output_plot_dir, "Tumor_Fibroblast_correlation_heatmap_boundary_v2.pdf")
+pdf(heatmap_filename_pdf, width = 4, height = 5)
 draw(ht_lung, heatmap_legend_side = "bottom", 
-     column_title = "Lung (TMR Boundary)", 
+     column_title = "Lung (TMR Boundary) v2", 
      column_title_gp = gpar(fontsize = 14, fontface = "bold"))
 dev.off()
 cat("PDF heatmap saved to:", heatmap_filename_pdf, "\n")
 
 cat("\n=== Analysis Complete ===\n")
-

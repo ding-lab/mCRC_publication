@@ -1,0 +1,19 @@
+Package	Version
+Morph	Version not found
+anndata	0.11.4
+banksy	Not installed
+harmonypy	0.0.10
+matplotlib	3.10.3
+numpy	2.3.0
+pandas	2.2.3
+scanpy	Not installed
+scikit-image	0.25.2
+scikit-learn	1.7.0
+scipy	1.16.2
+secuer	Not installed
+skimage	0.25.2
+sklearn	1.7.0
+spatialdata	Not installed
+spatialdata_io	Not installed
+squidpy	Not installed
+umap	Not installed

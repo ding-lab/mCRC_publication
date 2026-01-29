@@ -48,8 +48,8 @@
 "47","HT539C","M","White",NA,NA,1011,"alive"
 "48","CM579C","F","African American","mut","mut",2849,"alive"
 "49","CM798C","F","White","mut","wt",730,"dead"
-"50","SP369H",NA,NA,NA,NA,NA,NA
-"51","SP819H",NA,NA,NA,NA,NA,NA
+"50","SP369H","M","White",NA,NA,NA,NA
+"51","CM819H","M","White",NA,NA,NA,NA
 "52","PE0050C","M","African American","wt","wt",NA,"alive"
 "53","PE0067C","F","African American","wt","wt",NA,"alive"
 "54","PE0068C","M","African American","wt","wt",NA,"dead"
@@ -89,15 +89,10 @@
 "88","PE0820C","F","African American","wt","wt",NA,NA
 "89","PE0854C","M","African American","wt","wt",NA,NA
 "90","CMD001C","F","White",NA,NA,NA,NA
-"91","CMD002C",NA,NA,NA,NA,NA,NA
-"92","CMD003C","M","White",NA,NA,NA,NA
-"93","CMD004C",NA,NA,NA,NA,NA,NA
-"94","CMD006C",NA,NA,NA,NA,NA,NA
-"95","CMD007C",NA,"White",NA,NA,NA,NA
-"96","CMD009C",NA,NA,NA,NA,NA,NA
-"97","CMD010C","M","White",NA,NA,NA,NA
-"98","CMD011C","F","White",NA,NA,NA,NA
-"99","CMD012C",NA,NA,NA,NA,NA,NA
-"100","CMD014C","M","White",NA,NA,NA,NA
-"101","CMD015C","M","White",NA,NA,NA,NA
-"102","CMD016C","F","White",NA,NA,NA,NA
+"91","CMD003C","M","White",NA,NA,NA,NA
+"92","CMD007C",NA,"White",NA,NA,NA,NA
+"93","CMD010C","M","White",NA,NA,NA,NA
+"94","CMD011C","F","White",NA,NA,NA,NA
+"95","CMD014C","M","White",NA,NA,NA,NA
+"96","CMD015C","M","White",NA,NA,NA,NA
+"97","CMD016C","F","White",NA,NA,NA,NA

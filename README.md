@@ -67,4 +67,4 @@ source('script_name.R')
 ---
 
 **Manuscript**: Spatial Zonation of Tumor Cell States, Stromal-Immune Networks, and Growth Patterns in Metastatic Colorectal Cancer  
-**Status**: Pre-submission / Under Review
+**Status**: Under Review

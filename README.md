@@ -97,10 +97,40 @@ Scripts are named with figure identifiers:
 
 ## Requirements
 
-- **R Version**: R 4.0 or higher
-- **Key R Packages**: Seurat, tidyverse, ComplexHeatmap, AUCell, qs, future, CellChat
+### Software and Environments
+
+- **R Version**: R 4.4.3 (via `seurat5_env` conda environment)
+- **Python Versions**: 
+  - Python 3.13.3 (for R analysis environment)
+  - Python 3.13.7 (for 3D analysis)
+  - Python 3.10.19 (for morphological annotation)
+- **Key R Packages**: Seurat v5.3.0, tidyverse, ComplexHeatmap, AUCell, qs, future, CellChat
 - **System**: Linux (tested on RHEL 7), sufficient RAM for large Seurat objects (30GB+)
 - **Data Access**: Scripts require access to specific server file paths and data directories
+
+### Environment Setup
+
+**Recommended**: Use the conda environment files for reproducible setup:
+
+```bash
+# For R analysis (most scripts)
+conda env create -f envs/seurat5_env.yml
+conda activate seurat5_env
+
+# For morphological annotation
+conda env create -f envs/morph_env.yml
+conda activate morph_env
+
+# For 3D reconstruction
+conda env create -f envs/3d-analysis_env.yml
+conda activate 3d-analysis
+```
+
+For detailed package documentation, see:
+- `PACKAGE_DOCUMENTATION.md` - **Start here**: Guide to all package documentation files
+- `Software_packages_list.md` - Complete package documentation with descriptions
+- `Software_packages_concise.md` - Concise version for methods section
+- `envs/README.md` - Environment setup instructions
 
 ## Usage
 

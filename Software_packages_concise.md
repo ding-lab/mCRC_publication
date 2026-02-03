@@ -51,6 +51,11 @@
 
 ## Software Versions
 
-- R: 4.0 or higher
-- Seurat: v5.3.0
-- Python: Used for Xenium Banksy clustering and spatial analysis
+- **R**: 4.4.3 (via `seurat5_env` conda environment)
+- **Seurat**: v5.3.0
+- **Python**: 
+  - 3.13.3 (in `seurat5_env` for Xenium Banksy clustering and spatial analysis)
+  - 3.13.7 (in `3d-analysis` for 3D reconstruction)
+  - 3.10.19 (in `morph_env` for morphological annotation)
+
+**Note**: Exact package versions are specified in conda environment YAML files in `envs/`. For complete documentation, see `Software_packages_list.md`.

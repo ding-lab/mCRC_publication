@@ -24,6 +24,11 @@ tumor_cell_obj <- tumor_obj %>%
                  subset(Patient_ID != 'HT413C1') %>% 
                  subset(!(cell_type_xenium %in% c('APCDD1_CRC', 'Canonical_CRC_Stem_Proliferation')))
 
+# Create Organ variable combining colon and rectum into colorectum
+tumor_cell_obj@meta.data <- tumor_cell_obj@meta.data %>% 
+                            mutate(Organ = case_when(Site_of_Origin %in% c('rectum', 'colon') ~ 'colorectum',
+                                                     TRUE ~ Site_of_Origin))
+
 tumor_cell_obj$cell_type_xenium <- factor(tumor_cell_obj$cell_type_xenium,
                                           level = c('Non_Canonical_CRC_1',
                                                     'Canonical_CRC_Stem',
@@ -31,10 +36,26 @@ tumor_cell_obj$cell_type_xenium <- factor(tumor_cell_obj$cell_type_xenium,
                                                     'Canonical_CRC_Intestine'
                                                    ))
 
+# Create combined grouping variable: tumor_type_organ
+tumor_cell_obj@meta.data <- tumor_cell_obj@meta.data %>% 
+                            mutate(tumor_type_organ = paste0(Organ, '_', cell_type_xenium))
+
+# Define factor levels for the 12 groups (4 tumor types × 3 organs)
+tumor_type_levels <- c('Non_Canonical_CRC_1',
+                       'Canonical_CRC_Stem',
+                       'Canonical_CRC_Intestine_Proliferation',
+                       'Canonical_CRC_Intestine')
+organ_levels <- c('colorectum', 'liver', 'lung')
+tumor_type_organ_levels <- paste0(rep(organ_levels, each = length(tumor_type_levels)), '_', 
+                                  rep(tumor_type_levels, times = length(organ_levels)))
+
+tumor_cell_obj$tumor_type_organ <- factor(tumor_cell_obj$tumor_type_organ,
+                                          levels = tumor_type_organ_levels)
+
 rdylbu_colors <- rev(colorRampPalette(brewer.pal(10, "RdYlBu"))(10))
 color_breaks <- c(-2, -1, 0, 1, 2)
 
-p = DotPlot(tumor_cell_obj, features=rev(c('MET', 'EGFR', 'ERBB2', 'ROBO1', 'IGF1R')) , group.by='cell_type_xenium') +
+p = DotPlot(tumor_cell_obj, features=rev(c('MET', 'EGFR', 'ERBB2', 'ROBO1', 'IGF1R')) , group.by='tumor_type_organ') +
 theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
       coord_flip() +
       #coord_fixed() +
@@ -44,6 +65,6 @@ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
       scale_size_area(limits = c(0, 100), oob = scales::squish)
 
 
-pdf(file.path(output_dir, 'EGFR_ERBB2_MET_ROBO1_IGFR1_gene_expression_by_tumor_subtypes.pdf'), width = 4, height = 6)
+pdf(file.path(output_dir, 'EGFR_ERBB2_MET_ROBO1_IGFR1_gene_expression_by_tumor_subtypes.pdf'), width = 4, height = 12)
 print(p)
 dev.off()

@@ -58,7 +58,7 @@ ggplot(nb_tumor_prop, aes(x = neighborhoods, y = proportion, fill = All_cell_typ
   ) +
   scale_fill_manual(values = c("Non-canonical" = "#be0032")) -> BarP
 
-pdf(file=file.path(output_dir, 'F3G_mCRC_N26_TMR_NB_tumor_barplot2.pdf'), width=5, height=6) 
+pdf(file=file.path(output_dir, 'F3g_mCRC_N26_TMR_NB_tumor_barplot2.pdf'), width=5, height=6) 
 print(BarP)
 dev.off()
 
@@ -103,7 +103,7 @@ ggplot(nb_prop_df, aes(x = Organ, y = proportion, fill = neighborhoods, color = 
     tip.length = 0.01
   ) -> BoxP
 
-pdf(file=file.path(output_dir, 'F3I_mCRC_N26_TMR_NB_tumor_boxplot_COLbyNB.pdf'), width=12, height=6) 
+pdf(file=file.path(output_dir, 'F3i_mCRC_N26_TMR_NB_tumor_boxplot_COLbyNB.pdf'), width=12, height=6) 
 print(BoxP)
 dev.off()
 
@@ -155,7 +155,7 @@ ggplot(cell_prop_df2,
            tip.length = 0.01
        ) -> BoxP3
 
-pdf(file=file.path(output_dir, 'F3F_mCRC_N26_TMR_Primary_Met_tumor_boxplot.pdf'), width=5, height=4) 
+pdf(file=file.path(output_dir, 'F3f_mCRC_N26_TMR_Primary_Met_tumor_boxplot.pdf'), width=5, height=4) 
 print(BoxP3)
 dev.off()
 
@@ -216,7 +216,7 @@ ViolinP_nb4 <- ggplot(cell_prop_nb4,
     tip.length = 0.01
   )
 
-pdf(file=file.path(output_dir, 'F3K_mCRC_N26_NB4_Primary_Met_tumor_Proinvasive_boxplot.pdf'), width=6, height=4) 
+pdf(file=file.path(output_dir, 'F3k_mCRC_N26_NB4_Primary_Met_tumor_Proinvasive_boxplot.pdf'), width=6, height=4) 
 print(ViolinP_nb4)
 dev.off()
 
@@ -261,7 +261,7 @@ p <- DotPlot(noncan_tumor, features = core_border_markers, group.by = 'tumor_sub
      ) +         
      scale_size_area(limits = c(0, 100), oob = scales::squish)
 
-pdf(file=file.path(output_dir, 'F3L_Dotplot_border_vs_core_proinvasive_cells.pdf'), width=10, height=4) 
+pdf(file=file.path(output_dir, 'F3l_Dotplot_border_vs_core_proinvasive_cells.pdf'), width=10, height=4) 
 print(p)
 dev.off()
 
@@ -360,6 +360,6 @@ p <- ggplot(border_core_noncan_deg2,
     panel.grid.minor = element_blank()
   )
 
-pdf(file=file.path(output_dir, 'S5M_Volcano_border_vs_core_proinvasive_cells.pdf'), width=8, height=4) 
+pdf(file=file.path(output_dir, 'S5n_Volcano_border_vs_core_proinvasive_cells.pdf'), width=8, height=4) 
 print(p)
 dev.off()

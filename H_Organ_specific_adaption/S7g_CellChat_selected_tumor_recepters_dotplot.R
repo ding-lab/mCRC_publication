@@ -65,6 +65,6 @@ theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
       scale_size_area(limits = c(0, 100), oob = scales::squish)
 
 
-pdf(file.path(output_dir, 'EGFR_ERBB2_MET_ROBO1_IGFR1_gene_expression_by_tumor_subtypes.pdf'), width = 4, height = 12)
+pdf(file.path(output_dir, 'EGFR_ERBB2_MET_ROBO1_IGFR1_gene_expression_by_tumor_subtypes.pdf'), width = 7, height = 12)
 print(p)
 dev.off()

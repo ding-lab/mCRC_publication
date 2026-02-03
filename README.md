@@ -1,6 +1,6 @@
 # mCRC Manuscript Scripts
 
-This repository contains all R scripts and analysis pipelines used for the mCRC (metastatic Colorectal Cancer) manuscript. Scripts are organized by analysis category and figure generation.
+This repository contains all R scripts and analysis pipelines used for the manuscript: **"Spatial Zonation of Tumor Cell States, Stromal-Immune Networks, and Growth Patterns in Metastatic Colorectal Cancer"**. Scripts are organized by analysis category and figure generation.
 
 ## Folder Structure
 
@@ -66,5 +66,5 @@ source('script_name.R')
 
 ---
 
-**Manuscript**: mCRC (metastatic Colorectal Cancer)  
+**Manuscript**: Spatial Zonation of Tumor Cell States, Stromal-Immune Networks, and Growth Patterns in Metastatic Colorectal Cancer  
 **Status**: Pre-submission / Under Review

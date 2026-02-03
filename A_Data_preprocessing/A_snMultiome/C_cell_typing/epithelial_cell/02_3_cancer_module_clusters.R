@@ -10,8 +10,8 @@ library(scales)
 library(rstatix)
 library(data.table)
 library(googlesheets4)
-source("../../../scripts/jupyter_support_functions.R")
-source("../../../scripts/visiualization_support_functions.R")
+source("../../../support_scripts/jupyter_support_functions.R")
+source("../../../support_scripts/visiualization_support_functions.R")
 
 geneset_dir = '/diskmnt/Projects/MetNet_analysis_2/Colorectal/Analysis/genesets'
 colon_epithelial_geneset = readRDS(file.path(geneset_dir, 'colon_epithelium_genesets.rds'))

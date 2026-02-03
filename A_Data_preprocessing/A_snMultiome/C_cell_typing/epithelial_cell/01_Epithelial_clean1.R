@@ -2,7 +2,7 @@ library(Seurat)
 library(dplyr)
 library(ggplot2)
 library(MAST)
-source("../../../scripts/jupyter_support_functions.R")
+source("../../../support_scripts/jupyter_support_functions.R")
 
 stem_cell_genes = c('LGR5', 'ASCL2', 'OLFM4', 'PPP1R1B', 'RNF43', 'SATB2', 'SELENBP1',
                     'SLC12A2', 'SLC26A2', 'SMOC2', 'TCEA3', 'TSPAN8', 'UGT2B17',

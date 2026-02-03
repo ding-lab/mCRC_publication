@@ -3,7 +3,7 @@ library(dplyr)
 library(ggplot2)
 library(MAST)
 library(readr)
-source("../../../scripts/jupyter_support_functions.R")
+source("../../../support_scripts/jupyter_support_functions.R")
 
 setwd('/diskmnt/Projects/MetNet_analysis_2/Colorectal/snMultiome/rds_objects/cell_types_subset/epithelial')
 epithelial_clean = readRDS('57_Integrated_normalized_mCRC_snRNA_noDB_v7_epithelial_clean1.rds')

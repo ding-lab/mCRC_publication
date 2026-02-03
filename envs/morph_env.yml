@@ -1,3 +1,8 @@
+# Morphological annotation environment
+# Note: After creating this environment, install morph from GitHub:
+#   pip install git+https://github.com/ding-lab/morph.git
+# See: https://github.com/ding-lab/morph
+
 name: morph_env
 channels:
   - conda-forge

@@ -1,6 +1,6 @@
 | Package | Version |
 |---------|----------|
-| Morph | Version not found |
+| Morph | Install from GitHub: https://github.com/ding-lab/morph |
 | anndata | 0.11.4 |
 | banksy | Not installed |
 | harmonypy | 0.0.10 |

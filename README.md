@@ -120,6 +120,8 @@ conda activate seurat5_env
 # For morphological annotation
 conda env create -f envs/morph_env.yml
 conda activate morph_env
+# Install morph from GitHub
+pip install git+https://github.com/ding-lab/morph.git
 
 # For 3D reconstruction
 conda env create -f envs/3d-analysis_env.yml
@@ -131,6 +133,16 @@ For detailed package documentation, see:
 - `Software_packages_list.md` - Complete package documentation with descriptions
 - `Software_packages_concise.md` - Concise version for methods section
 - `envs/README.md` - Environment setup instructions
+
+## Bioinformatics Tools
+
+Many bioinformatics tools were used in the course of this work. All tools written and/or published by the authors are freely available at our public GitHub repository (https://github.com/ding-lab/), including:
+
+- **somaticwrapper** - Variant calling pipeline: https://github.com/ding-lab/somaticwrapper
+- **10Xmapping** - Code for mutation mapping from bulk to single cells: https://github.com/ding-lab/10Xmapping
+- **ffpefiltering** - Pipeline for FFPE WES filtering: https://github.com/ding-lab/ffpefiltering
+- **pecgs-pipeline** - Bulk RNA-seq alignment and transcript counting: https://github.com/ding-lab/pecgs-pipeline
+- **Morph** - Spatial transcriptomics toolset for tumor boundary detection: https://github.com/ding-lab/morph
 
 ## Usage
 

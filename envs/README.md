@@ -36,6 +36,8 @@ conda activate seurat5_env
 ```bash
 conda env create -f morph_env.yml
 conda activate morph_env
+# Install morph from GitHub
+pip install git+https://github.com/ding-lab/morph.git
 ```
 
 **Original location**: `/diskmnt/Users2/epeng/tools/conda_envs/morph_env`
@@ -43,6 +45,7 @@ conda activate morph_env
 **Key packages**:
 - Python 3.10.19
 - Minimal dependencies for morphological annotation workflows
+- **Morph** - Must be installed separately from GitHub: https://github.com/ding-lab/morph
 
 ### 3. `3d-analysis_env.yml`
 **Purpose**: 3D reconstruction and spatial analysis environment
@@ -78,6 +81,10 @@ The exact versions of all packages (including dependencies) are specified in eac
 **morph_env.yml:**
 - Python 3.10.19
 - Minimal dependencies for morphological annotation
+- **Note**: Morph package must be installed separately after environment creation:
+  ```bash
+  pip install git+https://github.com/ding-lab/morph.git
+  ```
 
 **3d-analysis_env.yml:**
 - Python 3.13.7

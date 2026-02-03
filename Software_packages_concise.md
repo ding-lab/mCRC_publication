@@ -44,7 +44,7 @@
 - umap, sklearn (scikit-learn)
 
 **Image processing:**
-- Morph, skimage (scikit-image), scipy
+- Morph (install from https://github.com/ding-lab/morph), skimage (scikit-image), scipy
 
 **Data manipulation:**
 - numpy, pandas, matplotlib

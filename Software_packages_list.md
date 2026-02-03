@@ -41,7 +41,11 @@ This document lists all software packages and libraries used for single-cell RNA
 - **sklearn** (scikit-learn) v1.7.0 - Machine learning, including PCA
 
 #### Image Processing (for Morphological Annotation)
-- **Morph** (Version not found) - Morphological feature extraction
+- **Morph** - Spatial transcriptomics toolset for tumor boundary detection and morphological operations. **Installation**: Must be installed from GitHub after setting up `morph_env`:
+  ```bash
+  pip install git+https://github.com/ding-lab/morph.git
+  ```
+  See: https://github.com/ding-lab/morph
 - **skimage** (scikit-image) v0.25.2 - Image processing
 - **scipy** v1.16.2 - Scientific computing
 
@@ -193,6 +197,8 @@ conda activate seurat5_env
 # For morphological annotation
 conda env create -f envs/morph_env.yml
 conda activate morph_env
+# Install morph from GitHub
+pip install git+https://github.com/ding-lab/morph.git
 
 # For 3D reconstruction and spatial analysis
 conda env create -f envs/3d-analysis_env.yml

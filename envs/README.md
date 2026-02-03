@@ -20,6 +20,8 @@ conda env create -f seurat5_env.yml
 conda activate seurat5_env
 ```
 
+**Build time**: ~30-60 minutes (depending on network speed and system)
+
 **Original location**: `/diskmnt/Users2/epeng/tools/conda_envs/seurat5_env`
 
 **Key packages**:
@@ -40,6 +42,8 @@ conda activate morph_env
 pip install git+https://github.com/ding-lab/morph.git
 ```
 
+**Build time**: ~5-10 minutes
+
 **Original location**: `/diskmnt/Users2/epeng/tools/conda_envs/morph_env`
 
 **Key packages**:
@@ -55,6 +59,8 @@ pip install git+https://github.com/ding-lab/morph.git
 conda env create -f 3d-analysis_env.yml
 conda activate 3d-analysis
 ```
+
+**Build time**: ~15-30 minutes
 
 **Original location**: `/diskmnt/Users2/epeng/tools/conda_envs/3d-analysis`
 

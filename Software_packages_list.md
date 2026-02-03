@@ -15,7 +15,6 @@ This document lists all software packages and libraries used for single-cell RNA
 
 #### Integration and Clustering
 - **harmony** v1.2.3 - Integration of single-cell datasets
-- **SeuratWrappers** (Not installed in current environment) - Additional Seurat integration methods
 - **reticulate** v1.42.0 - R interface to Python (for SCVI integration)
 
 #### Cell Type Annotation and Analysis
@@ -24,21 +23,31 @@ This document lists all software packages and libraries used for single-cell RNA
 
 ### Python Packages (for Xenium and Integration)
 
+**Note**: Python packages are distributed across multiple conda environments. See `envs/README.md` for environment-specific package lists.
+
 #### Spatial Transcriptomics
-- **scanpy** (Not installed in current environment) - Single-cell analysis in Python (used for Xenium data processing)
-- **anndata** v0.11.4 - Annotated data objects for single-cell genomics
-- **squidpy** (Not installed in current environment) - Spatial single-cell omics analysis
-- **spatialdata** (Not installed in current environment) - Spatial omics data structures
-- **spatialdata_io** (Not installed in current environment) - I/O for spatial omics data (including Xenium)
+- **scanpy** - Single-cell analysis in Python (used for Xenium data processing)
+  - v1.11.2 in `seurat5_env` (via pip)
+  - v1.9.5 in `banksy_env` (for Banksy clustering)
+  - v1.11.4 in `3d-analysis_env` (for 3D reconstruction)
+- **anndata** v0.11.4 - Annotated data objects for single-cell genomics (in `seurat5_env` via pip)
+- **squidpy** - Spatial single-cell omics analysis
+  - v1.6.5 in `banksy_env` (for Banksy clustering)
+  - v1.2.2 in `3d-analysis_env` (for 3D reconstruction)
+- **spatialdata** v0.4.0 - Spatial omics data structures (in `banksy_env`)
+- **spatialdata_io** v0.2.0 - I/O for spatial omics data (including Xenium) (in `banksy_env`)
 
 #### Clustering and Integration
-- **banksy** (Not installed in current environment) - Spatial clustering algorithm (Banksy clustering for Xenium)
-- **harmonypy** v0.0.10 - Harmony integration in Python
-- **secuer** (Not installed in current environment) - Additional spatial analysis tools
+- **banksy** - Spatial clustering algorithm (Banksy clustering for Xenium). Used via `banksy_env` environment
+- **harmonypy** v0.0.10 - Harmony integration in Python (in `seurat5_env` via pip, also in `banksy_env`)
+- **secuer** v1.1 - Additional spatial analysis tools (in `banksy_env` via pip)
 
 #### Dimensionality Reduction
-- **umap** (Not installed in current environment) - Uniform Manifold Approximation and Projection
-- **sklearn** (scikit-learn) v1.7.0 - Machine learning, including PCA
+- **umap-learn** - Uniform Manifold Approximation and Projection
+  - v0.5.7 in `seurat5_env` (via pip)
+  - v0.5.4 in `banksy_env`
+  - v0.5.9.post2 in `3d-analysis_env`
+- **sklearn** (scikit-learn) v1.7.0 - Machine learning, including PCA (in `seurat5_env` via pip)
 
 #### Image Processing (for Morphological Annotation)
 - **Morph** - Spatial transcriptomics toolset for tumor boundary detection and morphological operations. **Installation**: Must be installed from GitHub after setting up `morph_env`:
@@ -160,13 +169,9 @@ This document lists all software packages and libraries used for single-cell RNA
 - **matrixStats** v1.5.0 - Matrix statistics
 - **genefilter** v1.88.0 - Methods for filtering genes from microarray experiments
 
-## Packages Not Currently Installed
+## Package Availability
 
-The following packages are referenced in scripts but not currently installed in the environment:
-- **ImageBinPlot** - Image bin plotting functionality
-- **MicroSEC** - MicroSEC analysis package
-- **openxlsx** - Read, write and edit xlsx files
-- **SeuratWrappers** - Additional Seurat integration methods
+All packages listed above are available in the conda environments specified in `envs/`. Some packages may be optional dependencies or used only in specific analysis workflows. For exact package versions and availability, refer to the conda environment YAML files in `envs/`.
 
 ## Version Information
 
@@ -245,10 +250,9 @@ This repository contains multiple documentation files for packages and environme
 
 ## Complete Package List with Versions
 
-For a complete tabular list of all packages and their versions:
-- **R packages**: See `packages_versions_table.md`
-- **Python packages**: See `python_packages_versions_table.md`
-- **Complete environments**: See `envs/` directory for conda environment YAML files
+For complete package lists with exact versions:
+- **Complete environments**: See `envs/` directory for conda environment YAML files (source of truth)
+- **Quick reference**: See `Software_packages_concise.md` for a concise list organized by category
 
 To recreate the analysis environment, use the conda environment files in `envs/`:
 ```bash

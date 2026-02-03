@@ -35,13 +35,13 @@
 ## Python Packages
 
 **Spatial transcriptomics and single-cell analysis:**
-- scanpy, anndata, squidpy, spatialdata, spatialdata_io
+- scanpy (v1.9.5-1.11.4, depending on environment), anndata (v0.11.4-0.12.2), squidpy (v1.2.2-1.6.5), spatialdata (v0.4.0), spatialdata_io (v0.2.0)
 
 **Clustering and integration:**
-- banksy, harmonypy, secuer
+- banksy (via banksy_env), harmonypy (v0.0.10), secuer (v1.1)
 
 **Dimensionality reduction:**
-- umap, sklearn (scikit-learn)
+- umap-learn (v0.5.4-0.5.9), sklearn/scikit-learn (v1.7.0)
 
 **Image processing:**
 - Morph (install from https://github.com/ding-lab/morph), skimage (scikit-image), scipy
@@ -54,7 +54,8 @@
 - **R**: 4.4.3 (via `seurat5_env` conda environment)
 - **Seurat**: v5.3.0
 - **Python**: 
-  - 3.13.3 (in `seurat5_env` for Xenium Banksy clustering and spatial analysis)
+  - 3.13.3 (in `seurat5_env` for R analysis and Python integration)
+  - 3.11.6 (in `banksy_env` for Banksy clustering)
   - 3.13.7 (in `3d-analysis` for 3D reconstruction)
   - 3.10.19 (in `morph_env` for morphological annotation)
 

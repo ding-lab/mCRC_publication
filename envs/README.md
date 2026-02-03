@@ -6,8 +6,6 @@ For detailed package documentation, see:
 - `../PACKAGE_DOCUMENTATION.md` - **Start here**: Guide to all package documentation files
 - `../Software_packages_list.md` - Complete package documentation with descriptions
 - `../Software_packages_concise.md` - Concise version for methods section
-- `../packages_versions_table.md` - R packages version table
-- `../python_packages_versions_table.md` - Python packages version table
 
 ## Available Environments
 
@@ -73,6 +71,29 @@ conda activate 3d-analysis
 - JupyterLab with extensions
 - Image processing libraries (imageio, tifffile, pillow)
 
+### 4. `banksy_env.yml`
+**Purpose**: Banksy clustering for Xenium spatial transcriptomics
+
+**Usage**:
+```bash
+conda env create -f banksy_env.yml
+conda activate banksy
+```
+
+**Build time**: ~20-40 minutes
+
+**Original location**: `/diskmnt/Users2/simonmo/Software/miniforge3/envs/banksy`
+
+**Key packages**:
+- Python 3.11.6
+- scanpy 1.9.5
+- squidpy 1.6.5
+- spatialdata 0.4.0
+- harmonypy 0.0.10
+- secuer 1.1 (via pip)
+- leidenalg 0.10.1
+- JupyterLab and notebooks
+
 ## Package Versions
 
 The exact versions of all packages (including dependencies) are specified in each YAML file. Key package versions:
@@ -97,6 +118,15 @@ The exact versions of all packages (including dependencies) are specified in eac
 - scanpy 1.11.4
 - squidpy 1.2.2
 - scikit-image 0.25.2
+- See the YAML file for complete dependency list
+
+**banksy_env.yml:**
+- Python 3.11.6
+- scanpy 1.9.5
+- squidpy 1.6.5
+- spatialdata 0.4.0
+- harmonypy 0.0.10
+- secuer 1.1 (via pip)
 - See the YAML file for complete dependency list
 
 ## Notes

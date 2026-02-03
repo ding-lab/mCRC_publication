@@ -20,7 +20,7 @@ This repository contains all R scripts and analysis pipelines used for the manus
 ## Requirements
 
 - **R**: 4.4.3 (via `seurat5_env` conda environment)
-- **Python**: 3.13.3 (R analysis), 3.13.7 (3D analysis), 3.10.19 (morphological annotation)
+- **Python**: 3.13.3 (R analysis), 3.13.7 (3D analysis), 3.11.6 (Banksy clustering), 3.10.19 (morphological annotation)
 - **Key packages**: Seurat v5.3.0, tidyverse, ComplexHeatmap, AUCell, CellChat
 - **System**: Linux (tested on RHEL 7), 30GB+ RAM recommended
 
@@ -39,6 +39,10 @@ pip install git+https://github.com/ding-lab/morph.git
 # 3D reconstruction
 conda env create -f envs/3d-analysis_env.yml
 conda activate 3d-analysis
+
+# Banksy clustering (Xenium)
+conda env create -f envs/banksy_env.yml
+conda activate banksy
 ```
 
 See `envs/README.md` for build times and detailed setup instructions. For package documentation, see `PACKAGE_DOCUMENTATION.md`.

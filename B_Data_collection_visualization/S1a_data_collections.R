@@ -1,26 +1,30 @@
 ###############################################################################
 #  mCRC Sample Collection Combined Heatmap (hp + hlim + hlum + hom + hn)
 #  Author: Evan Peng
-#  Description: Reads Google Sheet metadata and produces annotation-only heatmap
+#  Description: Reads local CSV metadata files and produces annotation-only heatmap
 #               with pch annotations preserved for selected assays
 ###############################################################################
 
 # --- 1. Load Libraries -------------------------------------------------------
 suppressPackageStartupMessages({
-  library(googlesheets4)
   library(tidyverse)
   library(ComplexHeatmap)
 })
 
-gs4_deauth()  # read-only access
+# --- 2. Read Local CSV Files ---------------------------------------------------
+sample_tbl <- read_csv("/diskmnt/Projects/MetNet_analysis/Colorectal/mCRC_Manuscript_Script/B_Data_collection_visualization/mCRC_sample_collection.csv", show_col_types = FALSE) %>%
+  rename(Xenium_regular = Xenium_V1) %>%
+  mutate(across(all_of(c("Bulk_DNA", "Bulk_RNA", "snRNA", "snATAC", "Visium", "Visium_HD", 
+                         "Xenium_regular", "Xenium_5K", "Phenocycler")), 
+                ~ case_when(
+                  .x == 1 | .x == "1" ~ "available",
+                  .x == 0 | .x == "0" ~ "unavailable",
+                  .x == "tumor_only" ~ "tumor_only",
+                  is.na(.x) | .x == "" ~ "unavailable",
+                  TRUE ~ as.character(.x)
+                )))
 
-# --- 2. Read Google Sheets ---------------------------------------------------
-sheet_url <- "https://docs.google.com/spreadsheets/d/1d4Bn3guQTzqf4tWx5fZFc772JC2GhpKVvsg70V7EPbQ/edit?gid=83959954#gid=83959954"
-
-sample_tbl <- read_sheet(sheet_url, sheet = "Sample_collections") %>%
-  select(-c(MSI, APC_WXS, TP53_WXS, KRAS_WXS, Note))
-
-clinical_tbl <- read_sheet(sheet_url, sheet = "Clinical") %>%
+clinical_tbl <- read_csv("/diskmnt/Projects/MetNet_analysis/Colorectal/mCRC_Manuscript_Script/B_Data_collection_visualization/mCRC_clinical.csv", show_col_types = FALSE) %>%
   mutate(
     Age = if_else(Age_at_diagnosis > 50, ">50", "<50"),
     CRC_site = case_when(
@@ -30,11 +34,11 @@ clinical_tbl <- read_sheet(sheet_url, sheet = "Clinical") %>%
       TRUE ~ Site_in_Colon
     )
   ) %>%
-  select(-c(SP_ID, Age_at_diagnosis, Site_in_Colon,
-            MSI, APC, TP53, KRAS, Survival, FU_days, Note)) %>%
-  rename(Prior_Tx = Neoadjuvant_therapy)
+  select(-any_of(c("SP_ID", "Age_at_diagnosis", "Site_in_Colon",
+                   "MSI", "APC", "TP53", "KRAS", "Survival", "FU_days", "Note"))) %>%
+  rename(Prior_Tx = Systemic_treatment_in_6mo)
 
-sample_tbl <- left_join(sample_tbl, clinical_tbl, by = "Case_ID")
+sample_tbl <- left_join(sample_tbl, clinical_tbl, by = "Case_ID", relationship = "many-to-many")
 
 # --- 3. Subset by Tissue Type -----------------------------------------------
 sample_primary_tbl <- subset(sample_tbl, Tissue == "Primary")
@@ -53,7 +57,7 @@ organ_col <- c(Colon = "#C2B280", Rectum = "#604E97", Liver = "brown", Lung = "s
                LN = "olivedrab", Ovary = "tan4", Pancreas = "indianred1")
 age_col <- c(">50" = "lightblue3", "<50" = "lightblue1", "NA" = "gray75")
 sex_col <- c("M" = "royalblue", "F" = "plum", "NA" = "gray75")
-race_col <- c("White" = "darkgreen", "African American" = "firebrick2", "Unknown" = "gray75", "NA" = "gray75")
+race_col <- c("White" = "darkgreen", "African_American" = "firebrick2", "Unknown" = "gray75", "NA" = "gray75")
 site_col <- c("Left" = "darkorange", "Right" = "cornflowerblue", "Left/Right" = "olivedrab3",
               "Rectum" = "red3", "Unknown" = "gray75", "NA" = "gray75")
 tx_col <- c("Yes" = "salmon", "No" = "antiquewhite", "Unknown" = "gray75", "NA" = "gray75")

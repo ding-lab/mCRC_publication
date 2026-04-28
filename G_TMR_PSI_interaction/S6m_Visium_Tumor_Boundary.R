@@ -14,7 +14,7 @@ library(gridExtra)
 
 # Load gene sets
 geneset_path <- "/diskmnt/Projects/MetNet_analysis/Colorectal/data/genesets"
-CRC_genesets <- readRDS(file.path(geneset_path, "WASHU_snRNA_CRC_epithelial_genesets.rds"))
+CRC_genesets <- readRDS(file.path(geneset_path, "WASHU_snRNA_CRC_epithelial_genesets_updated.rds"))
 FIB_genesets <- readRDS(file.path(geneset_path, "WASHU_snRNA_CRC_fibroblast_genesets.rds"))
 
 # Check gene set names
@@ -22,7 +22,7 @@ names(CRC_genesets)
 names(FIB_genesets)
 
 # Load Visium tracking information
-Visium_tracking_path <- "/diskmnt/Users2/epeng/Projects/mCRC/scripts/Visium/CRC_Visium_tracking.csv"
+Visium_tracking_path <- "/diskmnt/Users2/epeng/Projects/mCRC/scripts/spatial_omics/Visium/CRC_Visium_tracking.csv"
 Visium_tracking <- read_csv(Visium_tracking_path, show_col_types = FALSE)
 head(Visium_tracking)
 
@@ -37,7 +37,7 @@ head(read_csv(Visium_tracking[[1, "MorphOutput_FINAL"]], show_col_types = FALSE)
 # ============================================================================
 
 # Read pseudobulk boundary AUCell scores
-pseudobulk_auc_path <- "/diskmnt/Projects/MetNet_analysis/Colorectal/data/Visium_annotations/AUCell_score/Pseudobulk/mCRC_Visium_pseudobulk_boundary_genesets_auc_score.csv"
+pseudobulk_auc_path <- "/diskmnt/Projects/MetNet_analysis/Colorectal/data/Visium_annotations/AUCell_score/Pseudobulk/mCRC_Visium_pseudobulk_boundary_genesets_auc_score_20260422.csv"
 pseudobulk_auc <- read_csv(pseudobulk_auc_path, show_col_types = FALSE)
 head(pseudobulk_auc)
 dim(pseudobulk_auc)
@@ -70,8 +70,10 @@ CRC_selected <- c('Canonical_CRC_Intestine',
                   'Canonical_CRC_Intestine_Proliferation',
                   'Canonical_CRC_Stem',
                   'Canonical_CRC_Stem_Proliferation',
-                  'Non_Canonical_CRC_1',
-                  'Non_Canonical_CRC_2')
+                  'CMETS',
+                  'APCDD1_CRC',
+                  'Neuroendocrine_like_tumor'
+                  )
 # Clean names to match column names
 CRC_selected_clean <- gsub(" ", "_", CRC_selected)
 CRC_selected_clean <- gsub("-", "_", CRC_selected_clean)
@@ -208,14 +210,14 @@ output_plot_dir <- file.path(getwd(), 'Visium_output')
 dir.create(output_plot_dir, showWarnings = FALSE, recursive = TRUE)
 
 # Save as PDF (5:4 aspect ratio)
-plot_filename_pdf <- file.path(output_plot_dir, "FIB_vs_Tumor_genesets_scatter_plots.pdf")
+plot_filename_pdf <- file.path(output_plot_dir, "FIB_vs_Tumor_genesets_scatter_plots_updated.pdf")
 pdf(plot_filename_pdf, width = n_cols * 5, height = n_rows * 4)
 do.call(grid.arrange, c(plots_list, ncol = n_cols))
 dev.off()
 cat("PDF plot saved to:", plot_filename_pdf, "\n")
 
 # Save as PNG (5:4 aspect ratio)
-plot_filename_png <- file.path(output_plot_dir, "FIB_vs_Tumor_genesets_scatter_plots.png")
+plot_filename_png <- file.path(output_plot_dir, "FIB_vs_Tumor_genesets_scatter_plots_updated.png")
 png(plot_filename_png, width = n_cols * 5 * 300, height = n_rows * 4 * 300, res = 300)
 do.call(grid.arrange, c(plots_list, ncol = n_cols))
 dev.off()

@@ -6,7 +6,6 @@
 ## ============================================================
 ## Generated from KRAS_CMETS_association_external_validation_revised.ipynb
 ## Notes:
-## - TP53 testing has been removed.
 ## - Update `outdir` and `geneset_path` before running if needed.
 ## ============================================================
 

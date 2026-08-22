@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# Fig. 4c / Extended Data Fig. 5p: tumor-state proportions in submucosa vs
+# Fig. 4c / Extended Data Fig. 7: tumor-state proportions in submucosa vs
 # muscularis propria after adding 3 primary CRC samples (PE0519, HT1090, HT1085)
 # to the original paired Xenium cases.
 # Source: Revesion/CMETS/MP_depth/MP_depth_analysis.ipynb

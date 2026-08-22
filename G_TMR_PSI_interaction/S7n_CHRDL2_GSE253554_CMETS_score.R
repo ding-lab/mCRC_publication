@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# Extended Data Fig. 6m / 7m: CMETS score after CHRDL2-mediated BMP-SMAD
+# Extended Data Fig. 7m / 8m: CMETS score after CHRDL2-mediated BMP-SMAD
 # attenuation in Caco-2 cells (GSE253554). Revision #2 plot uses day on the
 # x-axis and doxycycline dose as color.
 # Source: Revesion/CMETS/CMETS_interaction_functional.ipynb

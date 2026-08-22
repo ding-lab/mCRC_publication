@@ -13,10 +13,10 @@ This repository contains all R scripts and analysis pipelines used for the manus
 - **`B_Data_collection_visualization/`** - Data collection overview figures
 - **`C_Somatic_mutation_analysis/`** - Mutation analysis and visualization
 - **`D_Bulk_RNAseq/`** - Bulk RNA-seq analysis (CMS: CMScaller on primary, lmCMScaller on liver)
-- **`E_NB_and_Functional_Zone/`** - Neighborhood and functional zone analysis, including paired BANKSY (`S5abc_paired_BANKSY_neighborhoods.R`)
-- **`F_Tumor_subtypes/`** - Tumor subtype analysis, including KRAS local/section VAF (`15`, `17`–`20`) and AUCell survival with MSI/MMR Cox (`14`)
-- **`G_TMR_PSI_interaction/`** - Tumor Margin Region and Peri-Stromal Interface analysis, including expanded tissue-depth states (`F4c_expanded_tissue_depth_tumor_states.R`) and CHRDL2 / GSE253554
-- **`H_Organ_specific_adaption/`** - Organ-specific adaptation analysis, including Tabula Sapiens HGF/HBEGF/SLIT2
+- **`E_NB_and_Functional_Zone/`** - Neighborhood and functional zone analysis, including new Ext. Data Fig. 5 paired BANKSY (`S5abc_paired_BANKSY_neighborhoods.R`)
+- **`F_Tumor_subtypes/`** - Tumor subtype analysis (original Ext. Data Fig. 5 is now Fig. 6), including KRAS local/section VAF (`15`, `17`–`20`) and AUCell survival with MSI/MMR Cox (`14`)
+- **`G_TMR_PSI_interaction/`** - Tumor Margin Region and Peri-Stromal Interface analysis (Ext. Data Fig. 7), including expanded tissue-depth states (`F4c_expanded_tissue_depth_tumor_states.R`) and CHRDL2 / GSE253554
+- **`H_Organ_specific_adaption/`** - Organ-specific adaptation analysis (Ext. Data Fig. 8), including Tabula Sapiens HGF/HBEGF/SLIT2
 
 Generated Seurat objects, GEO/GDC downloads, and local PDFs/PNGs are listed in `.gitignore` and should not be committed. Already-tracked figure files stay tracked.
 

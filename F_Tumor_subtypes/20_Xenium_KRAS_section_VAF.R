@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# Section-level KRAS VAF in CMETS vs non-CMETS tumor cells (Ext. Data 7e–f / 8f).
+# Section-level KRAS VAF in CMETS vs non-CMETS tumor cells (Ext. Data 8e–f / 9f).
 # One VAF per Xenium section using G12D or G12V probes, whichever is the
 # sample-level call (ALT / (ALT + WT) >= 0.5).
 # Source: Revesion/CMETS/CMETS_mutation_mapping.ipynb

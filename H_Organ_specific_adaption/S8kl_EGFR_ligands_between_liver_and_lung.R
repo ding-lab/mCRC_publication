@@ -102,7 +102,7 @@ p_fig1 <- ggplot(
   ylab("Mean normalized expression per sample")
 
 
-pdf(file=file.path(out_dir, 'S7K_EGF_level_between_liver_lung.pdf'), width=11, height=4) 
+pdf(file=file.path(out_dir, 'S8K_EGF_level_between_liver_lung.pdf'), width=11, height=4) 
 p_fig1
 dev.off()
 
@@ -161,6 +161,6 @@ ht_fig2 <- Heatmap(
   column_names_gp = grid::gpar(fontsize = 7)
 )
 
-pdf(file=file.path(out_dir, 'S7L_EGF_level_between_liver_lung_heatmap.pdf'), width=11, height=4) 
+pdf(file=file.path(out_dir, 'S8L_EGF_level_between_liver_lung_heatmap.pdf'), width=11, height=4) 
 ht_fig2
 dev.off()

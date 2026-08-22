@@ -266,7 +266,7 @@ print(p)
 dev.off()
 
 
-# ---- Figure S5M: Volcano plot of border vs core DEGs ----
+# ---- Figure S6M: Volcano plot of border vs core DEGs ----
 all_subtype_deg <- read.csv(file.path(output_dir, 'Xenium_tumor_core_border_subtype_deg.csv'), row.names = 1)
 border_core_noncan_deg <- read.csv(file.path(output_dir, 'Xenium_tumor_core_border_non_canonical_deg.csv'), row.names = 1)
 border_core_noncan_deg$gene <- rownames(border_core_noncan_deg)
@@ -360,6 +360,6 @@ p <- ggplot(border_core_noncan_deg2,
     panel.grid.minor = element_blank()
   )
 
-pdf(file=file.path(output_dir, 'S5n_Volcano_border_vs_core_proinvasive_cells.pdf'), width=8, height=4) 
+pdf(file=file.path(output_dir, 'S6n_Volcano_border_vs_core_proinvasive_cells.pdf'), width=8, height=4) 
 print(p)
 dev.off()

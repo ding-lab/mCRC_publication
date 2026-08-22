@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 
-# Extended Data Fig. 7m-n: Tabula Sapiens organ- and cell-type-level expression
+# Extended Data Fig. 8m-n: Tabula Sapiens organ- and cell-type-level expression
 # of HGF, HBEGF, and SLIT2.
 # Source: Revesion/Organ_specific_interactions/TSC_HBEGF_HGF_validation.ipynb
 # Input CSVs are CELLxGENE gene-expression exports.
@@ -78,6 +78,6 @@ p_cells <- ggplot(plot_celltypes, aes(x = Cell_Group, y = `Gene Symbol`)) +
   theme(axis.text.x = element_text(angle = 55, hjust = 1, vjust = 1, size = 8)) +
   labs(x = "Cell type", y = "Gene")
 
-ggsave(file.path(output_dir, "S7m_Tabula_Sapiens_HGF_HBEGF_SLIT2_organs.pdf"), p_organs, width = 5, height = 4)
-ggsave(file.path(output_dir, "S7m_Tabula_Sapiens_HGF_HBEGF_SLIT2_celltypes.pdf"), p_cells, width = 12, height = 4)
+ggsave(file.path(output_dir, "S8m_Tabula_Sapiens_HGF_HBEGF_SLIT2_organs.pdf"), p_organs, width = 5, height = 4)
+ggsave(file.path(output_dir, "S8m_Tabula_Sapiens_HGF_HBEGF_SLIT2_celltypes.pdf"), p_cells, width = 12, height = 4)
 message("Wrote Tabula Sapiens ligand plots to ", output_dir)

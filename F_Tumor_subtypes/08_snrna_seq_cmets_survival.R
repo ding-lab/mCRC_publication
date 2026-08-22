@@ -1,4 +1,6 @@
-# Standalone: liver metastasis cohort — Cox models and KM plots for CMETS / stem proportions.
+# Standalone: liver metastasis cohort — continuous Cox models for CMETS / stem proportions.
+# Revision #1 removed the dichotomized Kaplan-Meier panel (original Fig. 3n).
+# Keep Cox as the internal-cohort result (HR 1.05, P = 0.183); interpret cautiously.
 
 suppressPackageStartupMessages({
   library(Seurat)

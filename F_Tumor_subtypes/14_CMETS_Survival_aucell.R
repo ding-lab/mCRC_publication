@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 
 # CMETS external survival validation using AUCell scores.
+# Revision #2 adds MSI/MMR-adjusted Cox models (Supp Table 3f).
 # Required local inputs:
 #   1) WASHU snRNA CRC gene-set RDS
 #   2) selected mCRC gene-set RDS containing Hallmark_EMT
@@ -241,6 +242,47 @@ fit_standard_models <- function(df, time_col, event_col, stage_col = NULL) {
   fits
 }
 
+fit_msi_models <- function(df, time_col, event_col, msi_col, stage_col = NULL) {
+  core <- c("CMETS_z", "Stem_z", "EMT_z", "Hypoxia_z", time_col, event_col, msi_col)
+  dat <- df %>%
+    filter(if_all(all_of(core), ~ !is.na(.x))) %>%
+    filter(.data[[time_col]] > 0, .data[[event_col]] %in% c(0, 1))
+  dat[[msi_col]] <- droplevels(factor(dat[[msi_col]]))
+
+  if (nrow(dat) == 0 || nlevels(dat[[msi_col]]) < 2 || sum(dat[[event_col]] == 1) == 0) {
+    warning("Skipping MSI/MMR-adjusted models for ", time_col, "/", event_col, ".")
+    return(list())
+  }
+
+  surv_formula <- function(rhs) as.formula(paste0("Surv(", time_col, ", ", event_col, ") ~ ", rhs))
+  msi_rhs <- msi_col
+  fits <- list()
+  fits[[paste0("CMETS + ", msi_col)]] <- coxph(surv_formula(paste0("CMETS_z + ", msi_rhs)), data = dat)
+  fits[[paste0("CMETS + Stem + ", msi_col)]] <- coxph(surv_formula(paste0("CMETS_z + Stem_z + ", msi_rhs)), data = dat)
+  fits[[paste0("CMETS + EMT + ", msi_col)]] <- coxph(surv_formula(paste0("CMETS_z + EMT_z + ", msi_rhs)), data = dat)
+  fits[[paste0("CMETS + Hypoxia + ", msi_col)]] <- coxph(surv_formula(paste0("CMETS_z + Hypoxia_z + ", msi_rhs)), data = dat)
+  fits[[paste0("CMETS + Stem + EMT + Hypoxia + ", msi_col)]] <- coxph(
+    surv_formula(paste0("CMETS_z + Stem_z + EMT_z + Hypoxia_z + ", msi_rhs)),
+    data = dat
+  )
+
+  if (!is.null(stage_col)) {
+    dat_stage <- dat %>% filter(!is.na(.data[[stage_col]]))
+    dat_stage[[stage_col]] <- droplevels(factor(dat_stage[[stage_col]]))
+    if (nrow(dat_stage) > 0 && nlevels(dat_stage[[stage_col]]) >= 2 && sum(dat_stage[[event_col]] == 1) > 0) {
+      fits[[paste0("CMETS + stage + ", msi_col)]] <- coxph(
+        surv_formula(paste0("CMETS_z + ", stage_col, " + ", msi_rhs)),
+        data = dat_stage
+      )
+      fits[[paste0("CMETS + Stem + EMT + Hypoxia + stage + ", msi_col)]] <- coxph(
+        surv_formula(paste0("CMETS_z + Stem_z + EMT_z + Hypoxia_z + ", stage_col, " + ", msi_rhs)),
+        data = dat_stage
+      )
+    }
+  }
+  fits
+}
+
 build_result_tbl <- function(fit_list, cohort, endpoint) {
   bind_rows(lapply(names(fit_list), function(nm) extract_cox(fit_list[[nm]], nm))) %>%
     as_tibble() %>%
@@ -282,7 +324,14 @@ prep_gse39582 <- function(genesets) {
         as.character(`tnm.stage:ch1`) == "4" ~ "Stage IV",
         TRUE ~ NA_character_
       ),
-      stage = factor(stage, levels = c("Stage I", "Stage II", "Stage III", "Stage IV"))
+      stage = factor(stage, levels = c("Stage I", "Stage II", "Stage III", "Stage IV")),
+      mmr_raw = as.character(`mmr.status:ch1`),
+      mmr_status = case_when(
+        mmr_raw == "pMMR" ~ "pMMR",
+        mmr_raw == "dMMR" ~ "dMMR",
+        TRUE ~ NA_character_
+      ),
+      mmr_status = factor(mmr_status, levels = c("pMMR", "dMMR"))
     )
 
   pheno_df %>% inner_join(score_df, by = "sample") %>% add_signature_zscores()
@@ -346,7 +395,14 @@ prep_gse41258 <- function(genesets) {
         as.character(`group stage:ch1`) %in% c("IV", "4", "Stage IV", "stage iv") ~ "Stage IV",
         TRUE ~ NA_character_
       ),
-      stage = factor(stage, levels = c("Stage I", "Stage II", "Stage III", "Stage IV"))
+      stage = factor(stage, levels = c("Stage I", "Stage II", "Stage III", "Stage IV")),
+      msi_raw = as.character(`microsattelite instability:ch1`),
+      msi_status = case_when(
+        msi_raw %in% c("MSS", "MSI-low") ~ "MSS/MSI-low",
+        msi_raw %in% c("MSI-high") ~ "MSI-high",
+        TRUE ~ NA_character_
+      ),
+      msi_status = factor(msi_status, levels = c("MSS/MSI-low", "MSI-high"))
     ) %>%
     filter(tissue == "Primary Tumor")
 
@@ -448,13 +504,25 @@ prep_tcga_surv <- function(tcga_obj, cancer_type, genesets) {
   stopifnot(identical(cd$sample_id_internal, score_df$sample_id_internal))
 
   tcga_df <- cd %>% inner_join(score_df, by = "sample_id_internal")
+  if (!"paper_MSI_status" %in% colnames(tcga_df)) {
+    tcga_df$paper_MSI_status <- NA_character_
+  }
   clin_df2 <- clin_df %>%
     rownames_to_column("sample_id_internal") %>%
     select(sample_id_internal, deceased, overall_survival, stage)
 
   tcga_df %>%
     left_join(clin_df2, by = "sample_id_internal") %>%
-    mutate(cancer_type = cancer_type) %>%
+    mutate(
+      cancer_type = cancer_type,
+      paper_MSI_status = as.character(paper_MSI_status),
+      msi_status = case_when(
+        paper_MSI_status %in% c("MSS", "MSI-L") ~ "MSS/MSI-L",
+        paper_MSI_status == "MSI-H" ~ "MSI-H",
+        TRUE ~ NA_character_
+      ),
+      msi_status = factor(msi_status, levels = c("MSS/MSI-L", "MSI-H"))
+    ) %>%
     filter(
       !is.na(overall_survival),
       !is.na(deceased),
@@ -485,6 +553,11 @@ fits_39582 <- fit_standard_models(gse39582_df, time_col = "OS_time", event_col =
 fits_17536 <- fit_standard_models(gse17536_df, time_col = "OS_time", event_col = "OS_event", stage_col = "stage")
 fits_41258 <- fit_standard_models(gse41258_df, time_col = "OS_time", event_col = "OS_event", stage_col = "stage")
 fits_tcga <- fit_standard_models(tcga_df, time_col = "overall_survival", event_col = "deceased", stage_col = "stage")
+
+# Revision #2 Supp Table 3f: CMETS Cox models adjusted for MSI / MMR.
+fits_39582_mmr <- fit_msi_models(gse39582_df, "OS_time", "OS_event", "mmr_status", "stage")
+fits_41258_msi <- fit_msi_models(gse41258_df, "OS_time", "OS_event", "msi_status", "stage")
+fits_tcga_msi <- fit_msi_models(tcga_df, "overall_survival", "deceased", "msi_status", "stage")
 
 css_dat <- gse159216_df %>%
   filter(!is.na(CMETS_z), !is.na(Stem_z), !is.na(EMT_z), !is.na(Hypoxia_z))
@@ -552,6 +625,15 @@ summary_all_terms <- bind_rows(
   build_result_tbl(fits_159216, "GSE159216", "CSS")
 )
 
+summary_msi_mmr <- bind_rows(
+  if (length(fits_tcga_msi)) build_result_tbl(fits_tcga_msi, "TCGA", "OS") else NULL,
+  if (length(fits_39582_mmr)) build_result_tbl(fits_39582_mmr, "GSE39582", "OS") else NULL,
+  if (length(fits_41258_msi)) build_result_tbl(fits_41258_msi, "GSE41258", "OS") else NULL
+)
+if (is.null(summary_msi_mmr) || !is.data.frame(summary_msi_mmr)) {
+  summary_msi_mmr <- tibble()
+}
+
 summary_cmets <- summary_all_terms %>%
   filter(term == "CMETS_z") %>%
   mutate(
@@ -577,6 +659,19 @@ write.table(
   quote = FALSE
 )
 
+if (nrow(summary_msi_mmr) > 0) {
+  write.table(
+    summary_msi_mmr,
+    file = file.path(output_dir, "summary_cmets_aucell_msi_mmr.tsv"),
+    sep = "\t",
+    row.names = FALSE,
+    quote = FALSE
+  )
+}
+
 message("Done.")
 message("Wrote: ", file.path(output_dir, "summary_all_terms_aucell_clean.tsv"))
 message("Wrote: ", file.path(output_dir, "summary_cmets_aucell_clean.tsv"))
+if (nrow(summary_msi_mmr) > 0) {
+  message("Wrote: ", file.path(output_dir, "summary_cmets_aucell_msi_mmr.tsv"))
+}

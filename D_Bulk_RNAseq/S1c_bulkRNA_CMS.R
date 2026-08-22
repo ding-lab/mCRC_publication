@@ -118,28 +118,66 @@ keep <- !is.na(symbol2entrez)
 emat <- vst_expr[keep, , drop = FALSE]
 rownames(emat) <- as.character(symbol2entrez[rownames(emat)])
 
-cms_results <- CMScaller(
-  emat,
-  RNAseq = TRUE,
-  FDR = 0.05
+# Revision #1: CMScaller for primary CRC, lmCMScaller for liver metastases.
+# Paired primary-to-metastasis transitions were dropped because only one
+# matched pair remained callable after the liver-tailored classifier.
+colnames(count_mat)[colnames(count_mat) == "CM1519C1-S1Y2E1"] <- "HT225C1-S1Y2E1"
+colnames(count_mat)[colnames(count_mat) == "CM1519C1-T1Y2E1"] <- "HT225C1-T1Y2E1"
+count_mat <- count_mat[, colnames(count_mat) != "HT225C1-S2T2A4E1", drop = FALSE]
+
+colon_ids <- c(
+  "HT225C1-S1Y2E1", "CM1563C1-S1Y1E1", "CM268C1-S1Y2E1", "CM318C1-S1Y1E1",
+  "CM329C1", "CM349C1", "CM350C1-S1Y1E1", "CM357C1-S1Y1E1", "CM374C1-S1Y1E1",
+  "CM376C1-S1Y1E1", "CM392C1-S1Y3E1", "CM397C1-S1Y1E1", "CM618C1-S1Y2E1",
+  "CM655C1-S1E2", "CM663C1-S1Y2E1", "CM724C1-S1E1", "CM873C1-S1E1",
+  "HT472C1-S1H4FC2E1"
+)
+rectum_ids <- c("CM492C1-S1Y2E1", "CM743C1-S1E1")
+liver_ids <- c(
+  "CM1563C1-T1Y1E1", "CM354C1-T3Y1E1", "CM392C2-Th1Y2E1",
+  "CM426C1-Th1A2E1", "CM492C2-T1Y2E1", "CM492C2-T2Y2E1", "CM556C1-T1Y2E1",
+  "CM618C2-T1Y2E1", "CM663C1-T1Y2E1", "HT112C1", "HT165C1-T1A3Y1E2",
+  "HT179C1-T1A2K2E3", "HT186C1-T1A3Y1E1", "HT225C1-T1Y2E1", "HT230C1-T2A3Y1E1",
+  "HT254C1-Th1K4A2E1", "HT260C1-Th1K1A3E1", "HT307C1-Th1K1A3E4",
+  "HT413C1-Th1K4A1E1", "HT472C1-Th1K2E1", "HT525C1-Th1K2E1", "HT342C1-Th1K3A3E1"
 )
 
-# ======================
-# Fix sample names BEFORE Organ mapping
-# ======================
-# Rename CM1519C1-S1Y2E1 → HT225C1-S1Y2E1
-rownames(cms_results)[rownames(cms_results) == "CM1519C1-S1Y2E1"] <- "HT225C1-S1Y2E1"
-rownames(cms_results)[rownames(cms_results) == "CM1519C1-T1Y2E1"] <- "HT225C1-T1Y2E1"
+primary_ids <- intersect(c(colon_ids, rectum_ids), colnames(count_mat))
+liver_keep <- intersect(liver_ids, colnames(count_mat))
 
- 
-# Remove HT225C1-S2T2A4E1 (removed due to no CMS)
-cms_results <- cms_results[!rownames(cms_results) %in% "HT225C1-S2T2A4E1", ]  
+cms_primary <- CMScaller(
+  emat = as.matrix(count_mat[, primary_ids, drop = FALSE]),
+  RNAseq = TRUE,
+  rowNames = "symbol",
+  doPlot = FALSE
+)
+cms_liver <- lmCMScaller(
+  emat = as.matrix(count_mat[, liver_keep, drop = FALSE]),
+  RNAseq = TRUE,
+  rowNames = "symbol"
+)
+
+extract_call <- function(res_obj, classifier_name) {
+  out <- as.data.frame(res_obj)
+  pred_col <- intersect(c("prediction", "class", "CMS", "subtype", "predictedCMS"), colnames(out))[1]
+  tibble(
+    sample_id = rownames(out),
+    classifier = classifier_name,
+    CMS = as.character(out[[pred_col]])
+  )
+}
+
+cms_results <- bind_rows(
+  extract_call(cms_primary, "CMScaller"),
+  extract_call(cms_liver, "lmCMScaller")
+) %>%
+  column_to_rownames("sample_id")  
 
 # ======================
 # Annotate Organ & CMS
 # ======================
 cms_results <- as.data.frame(cms_results)
-cms_results$CMS <- as.character(cms_results$prediction)
+cms_results$CMS[is.na(cms_results$CMS) | cms_results$CMS %in% c("", "<NA>")] <- "NA"
 
 cms_results <- cms_results %>%
   mutate(
@@ -227,47 +265,8 @@ pdf(file.path(outdir, "CMS_barplot.pdf"), width=4, height=4)
 p1
 dev.off()
 
-# ======================
-# Alluvium plot: Primary → Metastasis
-# ======================
-paired_df <- cms_results %>%
-  filter(CMS != "NA") %>%
-  distinct(case_id, PM_status, Organ2, CMS) %>%
-  group_by(case_id) %>%
-  filter(any(PM_status=="Primary") & any(PM_status=="Metastasis")) %>%
-  ungroup()
-
-print(paired_df)
-
-flow_df <- paired_df %>%
-  dplyr::select(case_id, PM_status, CMS) %>%
-  pivot_wider(names_from = PM_status, values_from = CMS) %>%
-  drop_na(Primary, Metastasis)
-
-p2 <- ggplot(flow_df,
-             aes(axis1 = Primary, axis2 = Metastasis, y = 1)) +
-  geom_alluvium(aes(fill = Primary), width = 1/8, alpha = 0.8) +
-  geom_stratum(width = 1/8, fill = "grey85", color = "black") +
-  geom_text(stat = "stratum", aes(label = after_stat(stratum)), size = 4) +
-  scale_x_discrete(
-    limits = c("Primary CMS", "Metastatic CMS"),
-    expand = c(0.15, 0.05)
-  ) +
-  scale_fill_manual(values = c(
-    CMS1="#1F77B4", CMS2="#FF7F0E",
-    CMS3="#2CA02C", CMS4="#D62728"
-  )) +
-  labs(
-    title = "CMS transitions: Primary → Metastasis",
-    x = "", y = "Number of cases"
-  ) +
-  theme_bw(base_size = 14) +
-  theme(legend.position = "none") +
-  theme_mydefault()
-
-pdf(file.path(outdir, "CMS_alluvium_plot.pdf"), width=6, height=4)
-p2
-dev.off()
+# Paired alluvium plot was removed in Revision #1 (only one callable pair
+# remained after lmCMScaller). Keep colorectal vs liver comparison only.
 
 # ======================
 # Colon vs Liver barplot + Fisher tests

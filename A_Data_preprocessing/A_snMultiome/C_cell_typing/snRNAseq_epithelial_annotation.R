@@ -623,8 +623,10 @@ epithelial_final$epi_cell_type6 <- factor(
     "Canonical_CRC_Stem", "Canonical_CRC_Intestine",
     "Canonical_CRC_Stem_Proliferation",
     "Canonical_CRC_Intestine_Proliferation",
+    "Neuroendocrine-like tumor",
     "Stem cells", "Transit-amplifying cells", "Enterocytes",
-    "Goblet cells", "Tuft cells", "Enteroendocrine-like cells"
+    "Goblet cells", "Tuft cells", "Enteroendocrine-like cells",
+    "Neuroendocrine cells"
   ))
 )
 
@@ -643,6 +645,52 @@ epithelial_final@meta.data <- epithelial_final@meta.data %>%
       TRUE ~ "Non_tumor_epithelial"
     )
   )
+
+# Revision #2: split Enteroendocrine-like cells into neuroendocrine-like tumor
+# vs bona fide neuroendocrine cells (FindSubCluster on RNA_snn, resolution 0.1).
+# Downstream tumor objects use the NE-included RDS produced from this split.
+if (graph_name %in% names(epithelial_final@graphs)) {
+  Idents(epithelial_final) <- "epi_cell_type6"
+  epithelial_final <- FindSubCluster(
+    object = epithelial_final,
+    cluster = "Enteroendocrine-like cells",
+    graph.name = graph_name,
+    subcluster.name = "epi_cell_type6_NE",
+    resolution = 0.1,
+    algorithm = 1
+  )
+  epithelial_final@meta.data <- epithelial_final@meta.data %>%
+    mutate(
+      epi_cell_type6 = case_when(
+        epi_cell_type6_NE == "Enteroendocrine-like cells_0" ~ "Neuroendocrine-like tumor",
+        epi_cell_type6_NE == "Enteroendocrine-like cells_1" ~ "Neuroendocrine cells",
+        TRUE ~ as.character(epi_cell_type6)
+      ),
+      CMETS_status = if_else(
+        epi_cell_type6 == "Neuroendocrine-like tumor",
+        "Other_CRC_tumor_state",
+        CMETS_status
+      )
+    )
+  epithelial_final$epi_cell_type6 <- factor(
+    epithelial_final$epi_cell_type6,
+    levels = rev(c(
+      "Non_Canonical_CRC_1", "Non_Canonical_CRC_2",
+      "Canonical_CRC_Stem", "Canonical_CRC_Intestine",
+      "Canonical_CRC_Stem_Proliferation",
+      "Canonical_CRC_Intestine_Proliferation",
+      "Neuroendocrine-like tumor",
+      "Stem cells", "Transit-amplifying cells", "Enterocytes",
+      "Goblet cells", "Tuft cells", "Enteroendocrine-like cells",
+      "Neuroendocrine cells"
+    ))
+  )
+} else {
+  warning(
+    "Graph ", graph_name, " not found; skipping neuroendocrine split. ",
+    "Use the NE-included tumor RDS for manuscript figures."
+  )
+}
 
 # ==============================================================================
 # 6. Save final object, metadata, and compact QC plots
@@ -676,7 +724,9 @@ epi_cell_type6_colors <- c(
   "Enterocytes" = "#882d17",
   "Goblet cells" = "#c2b280",
   "Tuft cells" = "#f99379",
-  "Enteroendocrine-like cells" = "#2b3d26"
+  "Enteroendocrine-like cells" = "#2b3d26",
+  "Neuroendocrine-like tumor" = "#654982",
+  "Neuroendocrine cells" = "#2b3d26"
 )
 
 # Use the final UMAP if available; otherwise fall back to the earlier epithelial UMAP.

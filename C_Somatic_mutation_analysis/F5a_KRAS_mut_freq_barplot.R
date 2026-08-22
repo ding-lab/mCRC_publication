@@ -64,14 +64,20 @@ case_tbl <- read_sheet(sheet_url, sheet = 'Clinical') %>%
       TRUE ~ as.character(Site_in_Colon)
     )
   ) %>%
-  select(-c(SP_ID, Age_at_diagnosis, Site_in_Colon,
-            MSI, APC, TP53, KRAS, KRAS_detail, Survival, FU_days, Note)) %>%
+  select(-c(any_of(c("SP_ID", "Other_ID")), Age_at_diagnosis, Site_in_Colon,
+            MSI, KRAS_detail, Survival, FU_days, Note)) %>%
   rename(Prior_Tx = Neoadjuvant_therapy) %>%
   mutate(
     Met_status = case_when(
       Dx_with_Metastasis == 'No' ~ 'No_Met',
       Dx_with_Metastasis == 'Yes' & Lung_Met == 'No' ~ 'Met_wo_Lung',
       Lung_Met == 'Yes' ~ 'Lung_Met'
+    ),
+    # Clinical KRAS includes chart-review calls when WES is missing (Revision #1 Fig. 5a).
+    KRAS = case_when(
+      KRAS %in% c("wt", "gain") ~ "wt",
+      KRAS %in% c("mut", "mut/gain") ~ "mut",
+      TRUE ~ as.character(KRAS)
     )
   ) %>%
   mutate(across(everything(), ~ if (is.list(.)) as.character(.) else .)) %>%
@@ -90,7 +96,8 @@ case_kras <- sample_kras %>%
     .groups = "drop"
   )
 
-case_tbl <- left_join(case_tbl, case_kras, by = "Case_ID")
+# Prefer clinical/chart KRAS (includes cases without WES). Keep WXS as a QC column only.
+case_tbl <- left_join(case_tbl, case_kras %>% rename(KRAS_WXS = KRAS), by = "Case_ID")
 
 # ---- Define metastasis status (No_Met / Liver_Met_only / Lung_Met) ----------
 case_tbl2 <- case_tbl %>%
@@ -136,10 +143,10 @@ case_detail <- per_sample_summary %>%
     .groups = "drop"
   )
 
-# # ---- Add manual case HT347C (No WXS but Medical record showed KRAS G12D)-----
-# case_detail <- case_detail %>%
-#   bind_rows(tibble(Case_ID = "HT347C", KRAS_detail = "G12D")) %>%
-#   distinct(Case_ID, .keep_all = TRUE)
+# Chart-review KRAS G12D for HT347C (no WES).
+case_detail <- case_detail %>%
+  bind_rows(tibble(Case_ID = "HT347C", KRAS_detail = "G12D")) %>%
+  distinct(Case_ID, .keep_all = TRUE)
 
 # ---- Merge back to case-level table -----------------------------------------
 case_tbl3 <- left_join(case_tbl2, case_detail, by = "Case_ID") %>%
@@ -149,17 +156,18 @@ case_tbl3 <- left_join(case_tbl2, case_detail, by = "Case_ID") %>%
       grepl("G12V", KRAS_detail) ~ "G12V",
       grepl("G13D", KRAS_detail) ~ "G13D",
       !is.na(KRAS_detail)        ~ "Other",
+      KRAS == "mut" & is.na(KRAS_detail) ~ "Unknown",
       TRUE                       ~ NA_character_
     )
   ) %>%
-  mutate(KRAS_details = factor(KRAS_details, levels = c("G12D","G12V","G13D","Other")))
+  mutate(KRAS_details = factor(KRAS_details, levels = c("G12D","G12V","G13D","Other","Unknown")))
 
 # ---- Calculate proportions ---------------------------------------------------
 plot_df2 <- case_tbl3 %>%
   group_by(LiLu_Met_status) %>%
   summarise(
     total_cases = n(),
-    kras_mut_cases = sum(KRAS == 1, na.rm = TRUE),
+    kras_mut_cases = sum(KRAS == "mut" | KRAS == 1, na.rm = TRUE),
     prop_kras = kras_mut_cases / total_cases,
     .groups = "drop"
   ) %>%
@@ -173,7 +181,7 @@ denom_df <- case_tbl3 %>%
   summarise(total_cases = n(), .groups = "drop")
 
 stack_df <- case_tbl3 %>%
-  filter(KRAS == 1, !is.na(KRAS_details), !is.na(LiLu_Met_status)) %>%
+  filter(KRAS %in% c("mut", 1, "1"), !is.na(KRAS_details), !is.na(LiLu_Met_status)) %>%
   group_by(LiLu_Met_status, KRAS_details) %>%
   summarise(kras_detail_cases = n(), .groups = "drop") %>%
   left_join(denom_df, by = "LiLu_Met_status") %>%
@@ -183,7 +191,7 @@ stack_df <- case_tbl3 %>%
   )
 
 # ---- Plot --------------------------------------------------------------------
-kras_detail_cols <- c(G12D="#4277b6", G12V="#db6917", G13D="#5fa641", Other="#91218c")
+kras_detail_cols <- c(G12D="#4277b6", G12V="#db6917", G13D="#5fa641", Other="#91218c", Unknown="orchid3")
 
 p4 <- ggplot(stack_df, aes(x = LiLu_Met_status, y = prop, fill = KRAS_details)) +
   geom_col(width = 0.6) +

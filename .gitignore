@@ -1,0 +1,69 @@
+# R
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+*.Rproj
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.egg-info/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.idea/
+.vscode/
+
+# Large analysis objects (do not push Seurat / AnnData / counts)
+*.rds
+*.qs
+*.rda
+*.RData
+*.h5ad
+*.h5
+*.loom
+*.h5seurat
+
+# Archives and GEO / GDC downloads
+*.gz
+*.bz2
+*.zip
+*.tar
+*.tgz
+GDCdata/
+soft_files/
+
+# Logs and job output
+*.log
+*.out
+*.err
+logs/
+
+# Generated figures from local runs (committed figure files stay tracked)
+*.pdf
+*.png
+*.svg
+*.tiff
+*.jpg
+
+# Temporary / cache
+tmp/
+temp/
+.cache/
+backup_cache/
+
+# Local script outputs (inputs stay on the analysis server)
+F_Tumor_subtypes/Xenium_local_VAF_output/
+E_NB_and_Functional_Zone/paired_BANKSY_output/
